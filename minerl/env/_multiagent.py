@@ -217,9 +217,8 @@ class _MultiAgentEnv(gym.Env):
             bottom_env_spec = bottom_env_spec.env_to_wrap
 
         # Process all of the observations using handlers.
-        obs_dict = {}
-        monitor_dict = {}
-        for h in bottom_env_spec.observables:
+        obs_dict = info
+        for h in bottom_env_spec.observables[:1]:
             obs_dict[h.to_string()] = h.from_hero(info)
 
         # Now we wrap
@@ -229,6 +228,7 @@ class _MultiAgentEnv(gym.Env):
         self._last_pov[actor_name] = obs_dict['pov']
         self._last_obs[actor_name] = obs_dict
 
+        monitor_dict = {}
         # Process all of the monotors (aux info) using THIS env spec.
         for m in self.task.monitors:
             monitor_dict[m.to_string()] = m.from_hero(info)
